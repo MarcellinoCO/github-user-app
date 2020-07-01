@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">Github User App</string>
+    <string name="title_activity_splash_screen">Github User App</string>
+
+    <string name="cd_github_logo">Github Logo</string>
+
+    <string name="title_splash_screen">Github User App</string>
+    <string name="title_user_list">Users List</string>
+    <string name="title_user_detail">User Details</string>
+
+</resources>
