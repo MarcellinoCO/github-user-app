@@ -34,6 +34,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_logo" />
 
+    <TextView
+        android:id="@+id/tv_credits"
+        style="@style/AppTheme.Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="@string/text_credit"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="parent" />
+
     <ProgressBar
         android:id="@+id/pb_loading"
         style="@style/AppTheme.ProgressBar"

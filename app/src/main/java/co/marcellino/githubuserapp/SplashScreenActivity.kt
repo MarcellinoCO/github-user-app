@@ -23,7 +23,9 @@ class SplashScreenActivity : AppCompatActivity() {
         //Ceritanya sedang loading sesuatu... Siapa tahu nanti butuh :)
         Timer().schedule(loadingDuration) {
             this@SplashScreenActivity.runOnUiThread { startAnimation() }
-            Timer().schedule(splashScreenDuration) { changeActivity() }
+            Timer().schedule(splashScreenDuration) {
+                this@SplashScreenActivity.runOnUiThread { changeActivity() }
+            }
         }
     }
 
