@@ -44,8 +44,5 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
 
-    implementation 'com.google.code.gson:gson:2.8.5'
-
-    implementation 'com.mikepenz:iconics-core:5.0.3'
-    implementation 'com.mikepenz:octicons-typeface:3.2.0.6-kotlin@aar'
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

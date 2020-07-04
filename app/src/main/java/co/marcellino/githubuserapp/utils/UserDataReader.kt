@@ -23,7 +23,7 @@ object UserDataReader {
         return listUser
     }
 
-    fun getJsonString(context: Context, jsonResourceID: Int): String? {
+    private fun getJsonString(context: Context, jsonResourceID: Int): String? {
         var jsonString: String? = null
         try {
             jsonString = context.resources.openRawResource(jsonResourceID).bufferedReader()

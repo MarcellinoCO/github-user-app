@@ -28,7 +28,7 @@ class UserDetailActivity : AppCompatActivity() {
 
         initializeAppBar()
 
-        user = intent.extras!!.getParcelable(EXTRA_USER_DATA)!!
+        user = intent.extras?.getParcelable(EXTRA_USER_DATA) ?: User()
         displaySharedElementTransition()
         displayData()
     }

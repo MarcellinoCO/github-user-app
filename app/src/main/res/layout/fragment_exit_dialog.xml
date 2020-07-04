@@ -7,7 +7,6 @@
     tools:context=".ExitDialogFragment">
 
     <TextView
-        android:id="@+id/tv_exit_title"
         style="@style/AppTheme.Text.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +17,6 @@
         android:text="@string/dialog_exit_title" />
 
     <TextView
-        android:id="@+id/tv_exit_description"
         style="@style/AppTheme.Text.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

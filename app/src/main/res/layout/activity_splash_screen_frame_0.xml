@@ -35,7 +35,6 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_logo" />
 
     <TextView
-        android:id="@+id/tv_credits"
         style="@style/AppTheme.Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +45,6 @@
         app:layout_constraintTop_toBottomOf="parent" />
 
     <ProgressBar
-        android:id="@+id/pb_loading"
         style="@style/AppTheme.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

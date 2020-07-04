@@ -14,7 +14,6 @@
     <string name="title_user_list">Users List</string>
     <string name="title_user_detail">User Details</string>
 
-    <string name="menu_sort">Sort</string>
     <string name="menu_sort_name_asc">Name ascending</string>
     <string name="menu_sort_name_des">Name descending</string>
     <string name="menu_sort_repository_asc">Repository ascending</string>
@@ -25,7 +24,6 @@
     <string name="text_credit">Created by Marcellino Chris O\'Vara</string>
     <string name="text_list_header">Users list:</string>
     <string name="text_company_header">Member of</string>
-    <string name="text_repository_header">repositories</string>
 
     <string name="format_company">Member of %1$s</string>
     <string name="format_repository">%1$d repositor%2$s</string>
@@ -35,10 +33,6 @@
     <string name="ph_name">Jake Wharton</string>
     <string name="ph_company">Google, Inc.</string>
     <string name="ph_location">Pittsburgh, PA, USA</string>
-    <string name="ph_repository">102 repositories</string>
-    <string name="ph_follower">56995 followers | 12 followings</string>
-
-    <string name="transition_logo">transition_logo</string>
 
     <string name="dialog_exit_title">Thank You!</string>
     <string name="dialog_exit_description">Do rate 5 stars ;D</string>

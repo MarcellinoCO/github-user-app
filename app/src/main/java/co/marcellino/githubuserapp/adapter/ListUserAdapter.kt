@@ -12,7 +12,7 @@ import co.marcellino.githubuserapp.R
 import co.marcellino.githubuserapp.model.User
 import com.bumptech.glide.Glide
 
-class ListUserAdapter(private val listUser: ArrayList<User>, val context: Context) :
+class ListUserAdapter(private val listUser: ArrayList<User>, private val context: Context) :
     RecyclerView.Adapter<ListUserAdapter.ViewHolder>() {
 
     private lateinit var onItemClickCallback: OnItemClickCallback
