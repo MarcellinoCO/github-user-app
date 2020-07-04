@@ -12,7 +12,7 @@ import co.marcellino.githubuserapp.model.User
 import co.marcellino.githubuserapp.utils.UserDataReader
 import kotlinx.android.synthetic.main.activity_user_list.*
 
-class UserListActivity : AppCompatActivity() {
+class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogListener {
     companion object {
         const val SORT_NAME_ASC = 0
         const val SORT_NAME_DES = 1
@@ -38,6 +38,10 @@ class UserListActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.apppbar_user_list, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onBackPressed() {
+        ExitDialogFragment().show(supportFragmentManager, ExitDialogFragment::class.java.simpleName)
     }
 
     private fun initializeAppBar() {
@@ -93,5 +97,9 @@ class UserListActivity : AppCompatActivity() {
             }
             initializeRecyclerView()
         }
+    }
+
+    override fun onExitDialogActionChosen(exit: Boolean) {
+        if (exit) finish()
     }
 }

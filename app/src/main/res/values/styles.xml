@@ -39,6 +39,11 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="AppTheme.ButtonOutlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/colorOnSecondary</item>
+        <item name="strokeColor">@color/colorPrimaryLight</item>
+    </style>
+
     <style name="AppTheme.ProgressBar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:indeterminateTint">@color/colorPrimary</item>
     </style>

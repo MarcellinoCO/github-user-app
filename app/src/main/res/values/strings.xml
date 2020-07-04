@@ -40,4 +40,9 @@
 
     <string name="transition_logo">transition_logo</string>
 
+    <string name="dialog_exit_title">Thank You!</string>
+    <string name="dialog_exit_description">Do rate 5 stars ;D</string>
+    <string name="dialog_exit_positive">Sure!</string>
+    <string name="dialog_exit_negative">Nope</string>
+
 </resources>
