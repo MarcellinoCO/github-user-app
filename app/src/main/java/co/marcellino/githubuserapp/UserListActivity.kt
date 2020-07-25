@@ -2,6 +2,7 @@ package co.marcellino.githubuserapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +10,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.marcellino.githubuserapp.adapter.ListUserAdapter
 import co.marcellino.githubuserapp.model.User
-import co.marcellino.githubuserapp.utils.UserDataReader
+import co.marcellino.githubuserapp.utils.GithubDataManager
 import kotlinx.android.synthetic.main.activity_user_list.*
 
 class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogListener {
@@ -23,6 +24,7 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
     }
 
     private var listUser: ArrayList<User> = arrayListOf()
+    private var currentPageIndex: Int = 0
 
     private lateinit var listUserAdapter: ListUserAdapter
 
@@ -31,8 +33,25 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         setContentView(R.layout.activity_user_list)
         initializeAppBar()
 
-        listUser = UserDataReader.getUserList(this, R.raw.githubuser)
+        GithubDataManager.setContext(applicationContext)
+
+        // listUser = UserDataReader.getUserList(this, R.raw.githubuser)
         initializeRecyclerView()
+        GithubDataManager.getUsersListAtPage(
+            currentPageIndex,
+            object : GithubDataManager.GithubDataListener {
+                override fun onUsersListPageSuccess(usersList: ArrayList<User>) {
+                    listUser = usersList
+                    Log.d("GithubUserApp", usersList.toString())
+                    initializeRecyclerView()
+                }
+            })
+
+        GithubDataManager.getTotalUsersCount(object : GithubDataManager.GithubDataListener {
+            override fun onTotalUsersCountSuccess(totalUsersCount: Int) {
+                Log.d("GithubUserApp", totalUsersCount.toString())
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

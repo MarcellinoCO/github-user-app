@@ -5,12 +5,13 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class User(
-    val username: String = "",
-    val name: String = "",
-    val avatar: String = "",
-    val company: String = "",
-    val location: String = "",
-    val repository: Int = 0,
-    val follower: Int = 0,
-    val following: Int = 0
+    var id: Int = 0,
+    var username: String = "",
+    var avatar: String = "",
+    var name: String = "",
+    var company: String = "",
+    var location: String = "",
+    var repository: Int = 0,
+    var follower: Int = 0,
+    var following: Int = 0
 ) : Parcelable

@@ -82,7 +82,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/iv_repository_icon"
                 app:layout_constraintTop_toTopOf="@id/iv_repository_icon"
-                tools:text="@string/format_repository" />
+                tools:text="@string/ph_repository" />
 
             <ImageView
                 android:id="@+id/iv_follower_icon"
@@ -108,7 +108,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/iv_follower_icon"
                 app:layout_constraintTop_toTopOf="@id/iv_follower_icon"
-                tools:text="@string/format_follower" />
+                tools:text="@string/ph_follow" />
 
             <View
                 android:id="@+id/divider_company"
@@ -146,7 +146,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/iv_company_icon"
                 app:layout_constraintTop_toTopOf="@id/iv_company_icon"
-                tools:text="@string/format_company" />
+                tools:text="@string/ph_company" />
 
             <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/barrier_company"
@@ -173,6 +173,7 @@
                 style="@style/AppTheme.Text.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 app:layout_constraintBottom_toBottomOf="@id/iv_location_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"

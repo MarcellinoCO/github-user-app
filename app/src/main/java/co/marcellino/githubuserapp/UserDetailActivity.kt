@@ -83,17 +83,18 @@ class UserDetailActivity : AppCompatActivity() {
         tv_name.text = user.name
         tv_user_name.text = user.username
 
-        val repositoryPlural: String = if (user.repository > 1) "ies" else "y"
-        tv_repository.text =
-            resources.getString(R.string.format_repository, user.repository, repositoryPlural)
-
-        val followerPlural: String = if (user.follower > 1) "s" else ""
-        val followingPlural: String = if (user.following > 1) "s" else ""
-        tv_follower.text = resources.getString(
-            R.string.format_follower,
-            user.follower, followerPlural,
-            user.following, followingPlural
+        tv_repository.text = resources.getQuantityString(
+            R.plurals.format_repository,
+            user.repository,
+            user.repository
         )
+
+        val followerPlural: String =
+            resources.getQuantityString(R.plurals.format_follower, user.follower, user.follower)
+        val followingPlural: String =
+            resources.getQuantityString(R.plurals.format_following, user.following, user.following)
+        tv_follower.text =
+            resources.getString(R.string.format_follow, followerPlural, followingPlural)
 
         tv_company.text = resources.getString(R.string.format_company, user.company)
         tv_location.text = user.location

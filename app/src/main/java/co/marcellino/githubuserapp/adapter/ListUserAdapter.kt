@@ -34,17 +34,21 @@ class ListUserAdapter(private val listUser: ArrayList<User>, private val context
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user: User = listUser[position]
 
-        val avatarResourceID =
-            context.resources.getIdentifier(user.avatar, "drawable", context.packageName)
-        Glide.with(holder.itemView.context).load(avatarResourceID).circleCrop()
+        // val avatarResourceID =
+        //     context.resources.getIdentifier(user.avatar, "drawable", context.packageName)
+        Glide.with(holder.itemView.context).load(user.avatar).circleCrop()
             .into(holder.ivAvatar)
 
         holder.ivAvatar.transitionName = user.username
 
         holder.tvUserName.text = user.username
-        holder.tvRealName.text = user.name
-        holder.tvOrganization.text = user.company
-        holder.tvLocation.text = user.location
+        holder.tvRealName.text = if (user.name != "null") user.name else "-"
+
+        holder.tvOrganization.text = if (user.company != "null") context.resources.getString(
+            R.string.format_company,
+            user.company
+        ) else "-"
+        holder.tvLocation.text = if (user.location != "null") user.location else "-"
 
         holder.itemView.setOnClickListener {
             onItemClickCallback.onItemClicked(holder.adapterPosition, user, holder.ivAvatar)
