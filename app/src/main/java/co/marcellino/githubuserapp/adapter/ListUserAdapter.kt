@@ -1,6 +1,7 @@
 package co.marcellino.githubuserapp.adapter
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import co.marcellino.githubuserapp.R
 import co.marcellino.githubuserapp.model.User
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 
 class ListUserAdapter(private val listUser: ArrayList<User>, private val context: Context) :
     RecyclerView.Adapter<ListUserAdapter.ViewHolder>() {
@@ -34,9 +39,34 @@ class ListUserAdapter(private val listUser: ArrayList<User>, private val context
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user: User = listUser[position]
 
-        // val avatarResourceID =
-        //     context.resources.getIdentifier(user.avatar, "drawable", context.packageName)
-        Glide.with(holder.itemView.context).load(user.avatar).circleCrop()
+        Glide.with(holder.itemView.context).load(user.avatar)
+            .placeholder(R.drawable.ic_person)
+            .circleCrop()
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean = false
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    holder.itemView.setOnClickListener {
+                        onItemClickCallback.onItemClicked(
+                            holder.adapterPosition,
+                            user,
+                            holder.ivAvatar
+                        )
+                    }
+                    return false
+                }
+            })
             .into(holder.ivAvatar)
 
         holder.ivAvatar.transitionName = user.username
@@ -49,10 +79,6 @@ class ListUserAdapter(private val listUser: ArrayList<User>, private val context
             user.company
         ) else "-"
         holder.tvLocation.text = if (user.location != "null") user.location else "-"
-
-        holder.itemView.setOnClickListener {
-            onItemClickCallback.onItemClicked(holder.adapterPosition, user, holder.ivAvatar)
-        }
 
         holder.itemView.animation = AlphaAnimation(0.0f, 1.0f).apply { duration = 1000L }
     }

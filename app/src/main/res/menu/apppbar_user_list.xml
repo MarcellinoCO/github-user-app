@@ -3,33 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/btn_menu_sort_name_asc"
-        android:title="@string/menu_sort_name_asc"
-        app:showAsAction="never" />
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/menu_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|always" />
 
     <item
-        android:id="@+id/btn_menu_sort_name_des"
-        android:title="@string/menu_sort_name_des"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/btn_menu_sort_repository_asc"
-        android:title="@string/menu_sort_repository_asc"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/btn_menu_sort_repository_des"
-        android:title="@string/menu_sort_repository_des"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/btn_menu_sort_follower_asc"
-        android:title="@string/menu_sort_follower_asc"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/btn_menu_sort_follower_des"
-        android:title="@string/menu_sort_follower_des"
-        app:showAsAction="never" />
+        android:id="@+id/language"
+        android:icon="@drawable/ic_language"
+        android:title="@string/menu_language"
+        app:showAsAction="ifRoom" />
 
 </menu>

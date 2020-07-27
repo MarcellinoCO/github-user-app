@@ -1,6 +1,6 @@
 package co.marcellino.githubuserapp
 
-import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -41,9 +41,8 @@ class UserDetailActivity : AppCompatActivity() {
     }
 
     private fun displaySharedElementTransition() {
-        val avatarResourceID = this.resources.getIdentifier(user.avatar, "drawable", packageName)
         iv_avatar.transitionName = user.username
-        Glide.with(this).load(avatarResourceID).circleCrop()
+        Glide.with(this).load(user.avatar).circleCrop()
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
@@ -63,24 +62,30 @@ class UserDetailActivity : AppCompatActivity() {
                     isFirstResource: Boolean
                 ): Boolean {
                     supportStartPostponedEnterTransition()
+
+                    val avatarBitmap = (resource as BitmapDrawable).bitmap
+                    Palette.from(avatarBitmap)
+                        .generate { palette ->
+                            val vibrantSwatch = palette?.vibrantSwatch
+                            val mutedSwatch = palette?.mutedSwatch
+                            val darkMutedSwatch = palette?.darkMutedSwatch
+                            this@UserDetailActivity.container_avatar.setBackgroundColor(
+                                vibrantSwatch?.rgb ?: mutedSwatch?.rgb ?: darkMutedSwatch?.rgb
+                                ?: ResourcesCompat.getColor(
+                                    resources,
+                                    R.color.colorPrimaryDark,
+                                    null
+                                )
+                            )
+                        }
+
                     return false
                 }
             }).into(iv_avatar)
-
-        Palette.from(BitmapFactory.decodeResource(resources, avatarResourceID))
-            .generate { palette ->
-                val vibrantSwatch = palette?.vibrantSwatch
-                val mutedSwatch = palette?.mutedSwatch
-                val darkMutedSwatch = palette?.darkMutedSwatch
-                this@UserDetailActivity.container_avatar.setBackgroundColor(
-                    vibrantSwatch?.rgb ?: mutedSwatch?.rgb ?: darkMutedSwatch?.rgb
-                    ?: ResourcesCompat.getColor(resources, R.color.colorPrimaryDark, null)
-                )
-            }
     }
 
     private fun displayData() {
-        tv_name.text = user.name
+        tv_name.text = if (user.name == "null") "-" else user.name
         tv_user_name.text = user.username
 
         tv_repository.text = resources.getQuantityString(
@@ -96,7 +101,10 @@ class UserDetailActivity : AppCompatActivity() {
         tv_follower.text =
             resources.getString(R.string.format_follow, followerPlural, followingPlural)
 
-        tv_company.text = resources.getString(R.string.format_company, user.company)
-        tv_location.text = user.location
+        tv_company.text = if (user.company == "null") "-" else resources.getString(
+            R.string.format_company,
+            user.company
+        )
+        tv_location.text = if (user.location == "null") "-" else user.location
     }
 }

@@ -9,20 +9,16 @@
     <string name="cd_icon_follower">Follower icon</string>
     <string name="cd_icon_company">Company icon</string>
     <string name="cd_icon_location">Location icon</string>
+    <string name="cd_icon_error">Error icon</string>
 
     <string name="title_splash_screen">Github User App</string>
     <string name="title_user_list">Users List</string>
     <string name="title_user_detail">User Details</string>
 
-    <string name="menu_sort_name_asc">Name ascending</string>
-    <string name="menu_sort_name_des">Name descending</string>
-    <string name="menu_sort_repository_asc">Repository ascending</string>
-    <string name="menu_sort_repository_des">Repository descending</string>
-    <string name="menu_sort_follower_asc">Follower ascending</string>
-    <string name="menu_sort_follower_des">Follower descending</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_language">Language</string>
 
     <string name="text_credit">Created by Marcellino Chris O\'Vara</string>
-    <string name="text_list_header">Users list:</string>
 
     <string name="format_company">Member of %1$s</string>
     <plurals name="format_repository">
@@ -38,6 +34,19 @@
         <item quantity="one">%1$d following</item>
         <item quantity="other">%1$d followings</item>
     </plurals>
+    <string name="format_page">Page %1$d of %2$d</string>
+    <string name="format_search_query">\'%1$s\':</string>
+    <plurals name="format_search_count">
+        <item quantity="one">%1$d user found</item>
+        <item quantity="other">%1$d users found</item>
+    </plurals>
+
+    <string name="error_loading_list">Error while loading list!</string>
+    <string name="error_try_again">Try again</string>
+
+    <string name="btn_list_to_top">Return to top</string>
+
+    <string name="hint_enter_username">Enter Username</string>
 
     <string name="ph_user_name">JakeWharton</string>
     <string name="ph_name">Jake Wharton</string>
@@ -45,6 +54,9 @@
     <string name="ph_follow">56995 followers | 12 following</string>
     <string name="ph_company">Member of Google, Inc.</string>
     <string name="ph_location">Pittsburgh, PA, USA</string>
+    <string name="ph_page">Page 1 of 100.000</string>
+    <string name="ph_search_query">\'test\':</string>
+    <string name="ph_search_count">500 users found</string>
 
     <string name="dialog_exit_title">Thank You!</string>
     <string name="dialog_exit_description">Do rate 5 stars ;D</string>
