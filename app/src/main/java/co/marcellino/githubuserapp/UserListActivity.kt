@@ -10,43 +10,46 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityOptionsCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.marcellino.githubuserapp.adapter.ListUserAdapter
 import co.marcellino.githubuserapp.model.User
-import co.marcellino.githubuserapp.utils.GithubDataManager
+import co.marcellino.githubuserapp.utils.NetworkManager
+import co.marcellino.githubuserapp.viewmodel.UserListViewModel
 import kotlinx.android.synthetic.main.activity_user_list.*
 
 class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogListener,
-    View.OnClickListener, GithubDataManager.GithubDataListener {
+    View.OnClickListener {
+
+    private lateinit var userLisViewModel: UserListViewModel
 
     private lateinit var listUserAdapter: ListUserAdapter
     private lateinit var listSearchAdapter: ListUserAdapter
+    private var totalPagesCount = 0
 
-    private var listUser: ArrayList<User> = arrayListOf()
-    private var currentPageIndex: Int = 0
-    private var totalUsersCount: Int = 0
+    private var isNextPageAvailable = false
+    private var isNextPageRequested = false
+    private var isPreviousPageAvailable = false
+    private var isPreviousPageRequested = false
 
     private var isLoading = true
-    private var isLoadingError = false
+    private var isError = false
 
-    private var isLoadingNextPage = false
-    private var isLoadingPreviousPage = false
-    private var isNextPageAvailable = false
-    private var isPreviousPageAvailable = false
-
-    private var listSearch: ArrayList<User> = arrayListOf()
-
-    private var isSearchError = false
+    private var isSearching = false
+    private var searchQuery = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_list)
+
         initializeAppBar()
 
-        initializeListRecyclerView()
-        initializeSearchRecyclerView()
-        GithubDataManager.setContext(applicationContext).setListener(this).getTotalUsersCount()
-            .getCurrentPage()
+        initializeListRecyclerView(arrayListOf(), true)
+        initializeSearchRecyclerView(arrayListOf(), true)
+
+        NetworkManager.getInstance(this)
+        initializeViewModel()
 
         btn_previous_page.setOnClickListener(this)
         btn_next_page.setOnClickListener(this)
@@ -65,33 +68,28 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         searchViewAction.queryHint = resources.getString(R.string.hint_enter_username)
         searchViewAction.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (!newText.isNullOrBlank()) {
-                    switchLoading(true, isSuccess = true, isDoneSearching = false)
-                    GithubDataManager.searchUsername(newText.trim())
-                }
+                if (!newText.isNullOrBlank()) userLisViewModel.loadSearchPage(newText)
                 return true
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrBlank()) {
-                    switchLoading(true, isSuccess = true, isDoneSearching = false)
-                    GithubDataManager.searchUsername(query.trim())
-                }
+                if (!query.isNullOrBlank()) userLisViewModel.loadSearchPage(query)
                 return true
             }
         })
         searchView.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                switchSearch(true)
-                return true
-            }
+            override fun onMenuItemActionExpand(item: MenuItem?) = true
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                switchSearch(false)
-                GithubDataManager.cancelSearchUsername()
+                userLisViewModel.cancelSearchPage()
                 return true
             }
         })
+
+        if (isSearching) {
+            searchView.expandActionView()
+            searchViewAction.setQuery(searchQuery, false)
+        }
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -102,44 +100,20 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.btn_previous_page -> {
-                if (currentPageIndex == 0) return
-
-                currentPageIndex--
-
-                isLoadingPreviousPage = true
-                if (!isPreviousPageAvailable) {
-                    switchLoading(true, isSuccess = true, isDoneSearching = false)
-                } else {
-                    GithubDataManager.getPreviousPage()
-                    isLoadingPreviousPage = false
-                }
-
-                if (currentPageIndex == 0) btn_previous_page.visibility = View.GONE
-            }
             R.id.btn_next_page -> {
-                currentPageIndex++
-
-                isLoadingNextPage = true
                 if (!isNextPageAvailable) {
-                    switchLoading(true, isSuccess = true, isDoneSearching = false)
-                } else {
-                    GithubDataManager.getNextPage()
-                    isLoadingNextPage = false
-                }
-
-                if (currentPageIndex > 0) btn_previous_page.visibility = View.VISIBLE
+                    setLoading()
+                    isNextPageRequested = true
+                } else userLisViewModel.loadNextPage()
+            }
+            R.id.btn_previous_page -> {
+                if (!isPreviousPageAvailable) {
+                    setLoading()
+                    isPreviousPageRequested = true
+                } else userLisViewModel.loadPreviousPage()
             }
             R.id.btn_error_retry -> {
-                currentPageIndex = 0
 
-                switchLoading(true, isSuccess = true, isDoneSearching = false)
-                isLoadingNextPage = false
-                isLoadingPreviousPage = false
-                isNextPageAvailable = false
-                isPreviousPageAvailable = false
-
-                GithubDataManager.reset().getCurrentPage()
             }
             R.id.btn_list_to_top -> {
                 sv_list.smoothScrollTo(0, 0, 1000)
@@ -154,10 +128,11 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         }
     }
 
-    private fun initializeListRecyclerView() {
-        listUserAdapter = ListUserAdapter(listUser, this)
+    private fun initializeListRecyclerView(usersList: ArrayList<User>, isFirstCreated: Boolean) {
+        listUserAdapter = ListUserAdapter(usersList, this)
 
-        rv_user_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        if (isFirstCreated) rv_user_list.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_user_list.adapter = listUserAdapter
 
         listUserAdapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
@@ -167,21 +142,10 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         })
     }
 
-    private fun updateListRecyclerView() {
-        listUserAdapter = ListUserAdapter(listUser, this)
-        rv_user_list.adapter = listUserAdapter
+    private fun initializeSearchRecyclerView(userList: ArrayList<User>, isFirstCreated: Boolean) {
+        listSearchAdapter = ListUserAdapter(userList, this)
 
-        listUserAdapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
-            override fun onItemClicked(position: Int, user: User, sharedElement: View) {
-                goToDetailActivity(user, sharedElement)
-            }
-        })
-    }
-
-    private fun initializeSearchRecyclerView() {
-        listSearchAdapter = ListUserAdapter(listSearch, this)
-
-        rv_user_search.layoutManager =
+        if (isFirstCreated) rv_user_search.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_user_search.adapter = listSearchAdapter
 
@@ -192,49 +156,121 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         })
     }
 
-    private fun updateSearchRecyclerView() {
-        listSearchAdapter = ListUserAdapter(listSearch, this)
-        rv_user_search.adapter = listSearchAdapter
+    private fun initializeViewModel() {
+        userLisViewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.NewInstanceFactory()
+        ).get(UserListViewModel::class.java)
 
-        listSearchAdapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
-            override fun onItemClicked(position: Int, user: User, sharedElement: View) {
-                goToDetailActivity(user, sharedElement)
+        if (userLisViewModel.getCurrentPage().value == null) userLisViewModel.loadCurrentPage()
+        userLisViewModel.getCurrentPage().observe(this, Observer { newListUser ->
+            initializeListRecyclerView(newListUser, false)
+
+            container_search.visibility = View.GONE
+            container_error.visibility = View.GONE
+            container_loading.visibility = View.GONE
+            container_list.visibility = View.VISIBLE
+        })
+
+        if (userLisViewModel.getTotalPagesCount().value == null) userLisViewModel.requestTotalPagesCount()
+        userLisViewModel.getTotalPagesCount().observe(this, Observer { newTotalPagesCount ->
+            totalPagesCount = newTotalPagesCount
+            tv_page.text =
+                resources.getString(
+                    R.string.format_page,
+                    userLisViewModel.getCurrentPageIndex().value,
+                    newTotalPagesCount
+                )
+        })
+
+        userLisViewModel.getCurrentPageIndex().observe(this, Observer { newCurrentPageIndex ->
+            tv_page.text =
+                resources.getString(R.string.format_page, newCurrentPageIndex, totalPagesCount)
+
+            if (newCurrentPageIndex > 1) btn_previous_page.visibility = View.VISIBLE
+            else btn_previous_page.visibility = View.GONE
+        })
+
+        userLisViewModel.isNextPageAvailable().observe(this, Observer { isNextPageAvailable ->
+            this.isNextPageAvailable = isNextPageAvailable
+
+            if (isNextPageAvailable && isNextPageRequested) {
+                userLisViewModel.loadNextPage()
+                isNextPageRequested = false
+            }
+        })
+
+        userLisViewModel.isPreviousPageAvailable()
+            .observe(this, Observer { isPreviousPageAvailable ->
+                this.isPreviousPageAvailable = isPreviousPageAvailable
+
+                if (isPreviousPageAvailable && isPreviousPageRequested) {
+                    userLisViewModel.loadPreviousPage()
+                    isPreviousPageRequested = false
+                }
+            })
+
+        userLisViewModel.getSearchPage().observe(this, Observer { newSearchPage ->
+            initializeSearchRecyclerView(newSearchPage, false)
+            setSearch()
+        })
+
+        userLisViewModel.getSearchQuery().observe(this, Observer { newSearchQuery ->
+            searchQuery = newSearchQuery
+            tv_search_query.text = resources.getString(R.string.format_search_query, newSearchQuery)
+        })
+
+        userLisViewModel.getSearchCount().observe(this, Observer { newSearchCount ->
+            tv_search_count.text = resources.getQuantityString(
+                R.plurals.format_search_count,
+                newSearchCount,
+                newSearchCount
+            )
+        })
+
+        userLisViewModel.isLoading().observe(this, Observer { isLoading ->
+            this.isLoading = isLoading
+            if (isLoading) setLoading()
+        })
+
+        userLisViewModel.isError().observe(this, Observer { isError ->
+            this.isError = isError
+            if (isError) setError()
+        })
+
+        userLisViewModel.isSearching().observe(this, Observer { isSearching ->
+            this.isSearching = isSearching
+            if (isSearching) setSearch()
+            else {
+                container_search.visibility = View.GONE
+                container_error.visibility = View.GONE
+                container_loading.visibility = View.GONE
+                container_title.visibility = View.VISIBLE
+                container_list.visibility = View.VISIBLE
             }
         })
     }
 
-    private fun switchLoading(isLoading: Boolean, isSuccess: Boolean, isDoneSearching: Boolean) {
-        this.isLoading = isLoading
-
-        container_loading.visibility = View.GONE
+    private fun setLoading() {
         container_list.visibility = View.GONE
-        container_error.visibility = View.GONE
         container_search.visibility = View.GONE
-
-        when {
-            isLoading -> container_loading.visibility = View.VISIBLE
-            isSuccess -> container_list.visibility = View.VISIBLE
-            isDoneSearching -> container_search.visibility = View.VISIBLE
-            else -> container_error.visibility = View.VISIBLE
-        }
+        container_error.visibility = View.GONE
+        container_loading.visibility = View.VISIBLE
     }
 
-    private fun switchSearch(isSearching: Boolean) {
-        if (isSearching) {
-            container_title.visibility = View.GONE
-            container_list.visibility = View.GONE
-            container_loading.visibility = View.GONE
-            container_error.visibility = View.GONE
-            container_search.visibility = View.VISIBLE
-        } else {
-            container_search.visibility = View.GONE
-            container_title.visibility = View.VISIBLE
-            when {
-                isLoading -> container_loading.visibility = View.VISIBLE
-                isLoadingError -> container_error.visibility = View.VISIBLE
-                else -> container_list.visibility = View.VISIBLE
-            }
-        }
+    private fun setError() {
+        container_list.visibility = View.GONE
+        container_search.visibility = View.GONE
+        container_loading.visibility = View.GONE
+        container_error.visibility = View.VISIBLE
+    }
+
+    private fun setSearch() {
+        container_title.visibility = View.GONE
+        container_list.visibility = View.GONE
+        container_error.visibility = View.GONE
+        container_loading.visibility = View.GONE
+        container_search.visibility = View.VISIBLE
     }
 
     private fun goToDetailActivity(user: User, sharedElement: View) {
@@ -252,73 +288,5 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
 
     override fun onExitDialogActionChosen(exit: Boolean) {
         if (exit) finish()
-    }
-
-    override fun onFailure() {
-        isLoadingError = true
-        switchLoading(false, isSuccess = false, isDoneSearching = false)
-    }
-
-    override fun onPageSuccess(usersList: ArrayList<User>) {
-        isLoadingError = false
-
-        listUser = usersList
-        updateListRecyclerView()
-
-        val totalPage = totalUsersCount / GithubDataManager.userNumPerPage
-        tv_page.text = resources.getString(R.string.format_page, currentPageIndex + 1, totalPage)
-
-        switchLoading(false, isSuccess = true, isDoneSearching = false)
-    }
-
-    override fun onTotalUsersCountSuccess(totalUsersCount: Int) {
-        this.totalUsersCount = totalUsersCount
-
-        val totalPage = totalUsersCount / GithubDataManager.userNumPerPage
-        tv_page.text = resources.getString(R.string.format_page, currentPageIndex + 1, totalPage)
-    }
-
-    override fun onNextPageAvailable(isAvailable: Boolean) {
-        isNextPageAvailable = isAvailable
-
-        if (isAvailable && isLoadingNextPage) {
-            GithubDataManager.getNextPage()
-
-            isLoadingNextPage = false
-        }
-    }
-
-    override fun onPreviousPageAvailable(isAvailable: Boolean) {
-        isPreviousPageAvailable = isAvailable
-
-        if (isAvailable && isLoadingPreviousPage) {
-            GithubDataManager.getPreviousPage()
-
-            isLoadingPreviousPage = false
-        }
-    }
-
-    override fun onSearchSuccess(
-        totalResultsCount: Int,
-        listUserSearch: ArrayList<User>,
-        query: String
-    ) {
-        isSearchError = false
-        switchLoading(false, isSuccess = false, isDoneSearching = true)
-
-        tv_search_query.text = resources.getString(R.string.format_search_query, query)
-        tv_search_count.text = resources.getQuantityString(
-            R.plurals.format_search_count,
-            totalResultsCount,
-            totalResultsCount
-        )
-        listSearch = listUserSearch
-
-        updateSearchRecyclerView()
-    }
-
-    override fun onSearchFailure() {
-        isSearchError = true
-        switchLoading(false, isSuccess = false, isDoneSearching = false)
     }
 }

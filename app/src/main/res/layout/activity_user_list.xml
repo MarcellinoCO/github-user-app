@@ -165,8 +165,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container_error"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 app:layout_constraintTop_toBottomOf="@id/container_title">
 
                 <ImageView
@@ -207,7 +207,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container_loading"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 app:layout_constraintTop_toBottomOf="@id/container_title">
 
                 <ProgressBar
