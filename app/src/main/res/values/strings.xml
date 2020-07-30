@@ -30,6 +30,10 @@
         <item quantity="one">%1$d follower</item>
         <item quantity="other">%1$d followers</item>
     </plurals>
+    <plurals name="format_title_follower">
+        <item quantity="one">Follower</item>
+        <item quantity="other">Followers</item>
+    </plurals>
     <plurals name="format_following">
         <item quantity="one">%1$d following</item>
         <item quantity="other">%1$d followings</item>

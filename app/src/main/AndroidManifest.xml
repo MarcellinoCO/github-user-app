@@ -32,7 +32,7 @@
 
         <activity
             android:name=".UserDetailActivity"
-            android:label="@string/title_user_detail" />
+            android:label=" " />
 
     </application>
 

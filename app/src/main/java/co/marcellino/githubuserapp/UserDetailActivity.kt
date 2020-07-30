@@ -6,12 +6,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.palette.graphics.Palette
+import co.marcellino.githubuserapp.adapter.FollowerPagerAdapter
 import co.marcellino.githubuserapp.model.User
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_user_detail.*
 
 class UserDetailActivity : AppCompatActivity() {
@@ -20,6 +22,7 @@ class UserDetailActivity : AppCompatActivity() {
     }
 
     private lateinit var user: User
+    private lateinit var userList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +32,14 @@ class UserDetailActivity : AppCompatActivity() {
         initializeAppBar()
 
         user = intent.extras?.getParcelable(EXTRA_USER_DATA) ?: User()
+        userList = intent.extras?.getParcelableArrayList("userList") ?: arrayListOf()
         displaySharedElementTransition()
         displayData()
+
+        val followerPagerAdapter =
+            FollowerPagerAdapter(this, user, userList, supportFragmentManager)
+        vp_follower.adapter = followerPagerAdapter
+        tabs_follower.setupWithViewPager(vp_follower)
     }
 
     private fun initializeAppBar() {
@@ -38,6 +47,24 @@ class UserDetailActivity : AppCompatActivity() {
         appbar_user_detail.setNavigationOnClickListener {
             onBackPressed()
         }
+
+        appbar_layout_user_detail.addOnOffsetChangedListener(object :
+            AppBarLayout.OnOffsetChangedListener {
+            var isShow = false
+            var scrollRange = -1
+
+            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
+                if (scrollRange == -1) scrollRange = appBarLayout.totalScrollRange
+
+                if (scrollRange + verticalOffset == 0) {
+                    appbar_collapsing_user_detail.title = user.username
+                    isShow = true
+                } else if (isShow) {
+                    appbar_collapsing_user_detail.title = ""
+                    isShow = false
+                }
+            }
+        })
     }
 
     private fun displaySharedElementTransition() {
@@ -70,6 +97,15 @@ class UserDetailActivity : AppCompatActivity() {
                             val mutedSwatch = palette?.mutedSwatch
                             val darkMutedSwatch = palette?.darkMutedSwatch
                             this@UserDetailActivity.container_avatar.setBackgroundColor(
+                                vibrantSwatch?.rgb ?: mutedSwatch?.rgb ?: darkMutedSwatch?.rgb
+                                ?: ResourcesCompat.getColor(
+                                    resources,
+                                    R.color.colorPrimaryDark,
+                                    null
+                                )
+                            )
+
+                            this@UserDetailActivity.appbar_user_detail.setBackgroundColor(
                                 vibrantSwatch?.rgb ?: mutedSwatch?.rgb ?: darkMutedSwatch?.rgb
                                 ?: ResourcesCompat.getColor(
                                     resources,

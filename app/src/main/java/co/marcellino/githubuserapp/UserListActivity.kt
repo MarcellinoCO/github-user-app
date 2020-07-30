@@ -33,6 +33,8 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
     private var isPreviousPageAvailable = false
     private var isPreviousPageRequested = false
 
+    var listUser = arrayListOf<User>()
+
     private var isLoading = true
     private var isError = false
 
@@ -170,6 +172,8 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
             container_error.visibility = View.GONE
             container_loading.visibility = View.GONE
             container_list.visibility = View.VISIBLE
+
+            this.listUser = newListUser
         })
 
         if (userLisViewModel.getTotalPagesCount().value == null) userLisViewModel.requestTotalPagesCount()
@@ -276,6 +280,7 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
     private fun goToDetailActivity(user: User, sharedElement: View) {
         val intentDetailActivity = Intent(this@UserListActivity, UserDetailActivity::class.java)
         intentDetailActivity.putExtra(UserDetailActivity.EXTRA_USER_DATA, user)
+        intentDetailActivity.putExtra("userList", listUser)
 
         val sharedElementTransition = ActivityOptionsCompat.makeSceneTransitionAnimation(
             this@UserListActivity,
