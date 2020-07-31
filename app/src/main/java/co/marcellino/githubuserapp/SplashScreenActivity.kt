@@ -12,12 +12,9 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 class SplashScreenActivity : AppCompatActivity() {
-    /** private val loadingDuration = 2000L
+    private val loadingDuration = 2000L
     private val splashScreenDuration = 3000L
-    private val animationDuration = 1200L */
-    private val loadingDuration = 100L
-    private val splashScreenDuration = 100L
-    private val animationDuration = 100L
+    private val animationDuration = 1200L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

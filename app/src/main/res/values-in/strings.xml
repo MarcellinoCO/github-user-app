@@ -11,7 +11,7 @@
     <string name="cd_icon_location">Lambang lokasi</string>
     <string name="cd_icon_error">Lambang error</string>
 
-    <string name="title_splash_screen">Aplikasi Pengguna Github</string>
+    <string name="title_splash_screen">Github User App</string>
     <string name="title_user_list">Daftar Pengguna</string>
     <string name="title_user_detail">Detail Pengguna</string>
 
