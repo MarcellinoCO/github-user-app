@@ -365,6 +365,8 @@ class UserListViewModel : ViewModel() {
                                 if (i == (min(userPerPage, searchUsersArray.length()) - 1)) {
                                     tempSearchPage.sortBy { it.id }
                                     liveSearchPage.postValue(tempSearchPage)
+
+                                    isError.postValue(false)
                                     isLoading.postValue(false)
                                 }
                             },

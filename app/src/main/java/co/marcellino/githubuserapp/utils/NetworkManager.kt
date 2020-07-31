@@ -15,6 +15,8 @@ class NetworkManager constructor(context: Context?) {
         const val TAG_NEXT_PAGE = "tag_next_page_request"
         const val TAG_PREVIOUS_PAGE = "tag_previous_page"
         const val TAG_SEARCH = "tag_search"
+        const val TAG_FOLLOWER = "tag_follower"
+        const val TAG_FOLLOWING = "tag_following"
 
         @Volatile
         private var INSTANCE: NetworkManager? = null

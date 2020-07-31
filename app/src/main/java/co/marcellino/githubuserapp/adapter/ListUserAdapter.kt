@@ -17,10 +17,10 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
-class ListUserAdapter(private val listUser: ArrayList<User>, private val context: Context) :
+open class ListUserAdapter(private val listUser: ArrayList<User>, private val context: Context) :
     RecyclerView.Adapter<ListUserAdapter.ViewHolder>() {
 
-    private lateinit var onItemClickCallback: OnItemClickCallback
+    private var onItemClickCallback: OnItemClickCallback? = null
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivAvatar: ImageView = itemView.findViewById(R.id.iv_item_avatar)
@@ -58,7 +58,7 @@ class ListUserAdapter(private val listUser: ArrayList<User>, private val context
                     isFirstResource: Boolean
                 ): Boolean {
                     holder.itemView.setOnClickListener {
-                        onItemClickCallback.onItemClicked(
+                        onItemClickCallback?.onItemClicked(
                             holder.adapterPosition,
                             user,
                             holder.ivAvatar

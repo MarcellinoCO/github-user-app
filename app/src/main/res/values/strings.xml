@@ -38,6 +38,7 @@
         <item quantity="one">%1$d following</item>
         <item quantity="other">%1$d followings</item>
     </plurals>
+    <string name="format_title_following">Following</string>
     <string name="format_page">Page %1$d of %2$d</string>
     <string name="format_search_query">\'%1$s\':</string>
     <plurals name="format_search_count">
