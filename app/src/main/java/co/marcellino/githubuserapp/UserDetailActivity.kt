@@ -27,7 +27,6 @@ class UserDetailActivity : AppCompatActivity() {
     private lateinit var userDetailViewModel: UserDetailViewModel
 
     private lateinit var user: User
-    private lateinit var userList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

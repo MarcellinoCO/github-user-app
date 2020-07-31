@@ -13,7 +13,6 @@
 
     <string name="title_splash_screen">Github User App</string>
     <string name="title_user_list">Daftar Pengguna</string>
-    <string name="title_user_detail">Detail Pengguna</string>
 
     <string name="menu_search">Cari</string>
     <string name="menu_language">Bahasa</string>
