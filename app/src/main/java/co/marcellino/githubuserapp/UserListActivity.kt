@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -115,7 +116,7 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
                 } else userLisViewModel.loadPreviousPage()
             }
             R.id.btn_error_retry -> {
-
+                if (listUser.isNullOrEmpty()) userLisViewModel.loadCurrentPage()
             }
             R.id.btn_list_to_top -> {
                 sv_list.smoothScrollTo(0, 0, 1000)
@@ -126,6 +127,11 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
     private fun initializeAppBar() {
         setSupportActionBar(appbar_user_list)
         appbar_user_list.setOnMenuItemClickListener {
+            if (it.itemId == R.id.language) {
+                val changeLanguageIntent = Intent(Settings.ACTION_LOCALE_SETTINGS)
+                startActivity(changeLanguageIntent)
+            }
+
             true
         }
     }

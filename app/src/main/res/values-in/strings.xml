@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Github User App</string>
+    <string name="title_activity_splash_screen">Github User App</string>
+
+    <string name="cd_github_logo">Logo Github</string>
+    <string name="cd_user_avatar">Avatar pengguna</string>
+    <string name="cd_icon_repository">Lambang repositori</string>
+    <string name="cd_icon_follower">Lambang pengikut</string>
+    <string name="cd_icon_company">Lambang perusahaan</string>
+    <string name="cd_icon_location">Lambang lokasi</string>
+    <string name="cd_icon_error">Lambang error</string>
+
+    <string name="title_splash_screen">Aplikasi Pengguna Github</string>
+    <string name="title_user_list">Daftar Pengguna</string>
+    <string name="title_user_detail">Detail Pengguna</string>
+
+    <string name="menu_search">Cari</string>
+    <string name="menu_language">Bahasa</string>
+
+    <string name="text_credit">Dibuat oleh Marcellino Chris O\'Vara</string>
+
+    <string name="format_company">Anggota dari %1$s</string>
+    <plurals name="format_repository">
+        <item quantity="other">%1$d repositori</item>
+    </plurals>
+    <string name="format_follow">%1$s | %2$s</string>
+    <plurals name="format_follower">
+        <item quantity="other">%1$d pengikut</item>
+    </plurals>
+    <plurals name="format_title_follower">
+        <item quantity="other">Pengikut</item>
+    </plurals>
+    <plurals name="format_following">
+        <item quantity="other">%1$d mengikuti</item>
+    </plurals>
+    <string name="format_title_following">Mengikuti</string>
+    <string name="format_page">Halaman %1$d dari %2$d</string>
+    <string name="format_search_query">\'%1$s\':</string>
+    <plurals name="format_search_count">
+        <item quantity="other">%1$d pengguna ditemukan</item>
+    </plurals>
+
+    <string name="error_loading_list">Error saat memuat daftar!</string>
+    <string name="error_try_again">Coba lagi</string>
+
+    <string name="btn_list_to_top">Kembali ke atas</string>
+
+    <string name="hint_enter_username">Masukkan Username</string>
+
+    <string name="ph_user_name">JakeWharton</string>
+    <string name="ph_name">Jake Wharton</string>
+    <string name="ph_repository">102 repositori</string>
+    <string name="ph_follow">56995 pengikut | 12 mengikuti</string>
+    <string name="ph_company">Anggota dari Google, Inc.</string>
+    <string name="ph_location">Pittsburgh, PA, USA</string>
+    <string name="ph_page">Halaman 1 dari 100.000</string>
+    <string name="ph_search_query">\'test\':</string>
+    <string name="ph_search_count">500 pengguna ditemukan</string>
+
+    <string name="dialog_exit_title">Terima Kasih!</string>
+    <string name="dialog_exit_description">Tolong beri 5 bintang ;D</string>
+    <string name="dialog_exit_positive">Pasti!</string>
+    <string name="dialog_exit_negative">Tidak</string>
+</resources>
