@@ -116,7 +116,8 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
                 } else userLisViewModel.loadPreviousPage()
             }
             R.id.btn_error_retry -> {
-                if (listUser.isNullOrEmpty()) userLisViewModel.loadCurrentPage()
+                if (isSearching) userLisViewModel.loadSearchPage(searchQuery)
+                else userLisViewModel.loadCurrentPage()
             }
             R.id.btn_list_to_top -> {
                 sv_list.smoothScrollTo(0, 0, 1000)
