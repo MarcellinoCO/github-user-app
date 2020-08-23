@@ -3,12 +3,14 @@ package co.marcellino.githubuserapp
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.palette.graphics.Palette
 import co.marcellino.githubuserapp.adapter.FollowerPagerAdapter
+import co.marcellino.githubuserapp.db.AppDatabase
 import co.marcellino.githubuserapp.model.User
 import co.marcellino.githubuserapp.viewmodel.UserDetailViewModel
 import com.bumptech.glide.Glide
@@ -18,6 +20,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_user_detail.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class UserDetailActivity : AppCompatActivity() {
     companion object {
@@ -25,6 +29,7 @@ class UserDetailActivity : AppCompatActivity() {
     }
 
     private lateinit var userDetailViewModel: UserDetailViewModel
+    private lateinit var appDatabase: AppDatabase
 
     private lateinit var user: User
 
@@ -33,16 +38,27 @@ class UserDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user_detail)
 
         supportPostponeEnterTransition()
-        initializeAppBar()
 
         user = intent.extras?.getParcelable(EXTRA_USER_DATA) ?: User()
         initializeViewModel()
         displaySharedElementTransition()
 
+        appDatabase = AppDatabase(applicationContext)
+        initializeAppBar()
+
         val followerPagerAdapter =
             FollowerPagerAdapter(this, user, supportFragmentManager)
         vp_follower.adapter = followerPagerAdapter
         tabs_follower.setupWithViewPager(vp_follower)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.appbar_user_detail, menu)
+
+        if (user.isFavorite) appbar_user_detail.menu.getItem(0).setIcon(R.drawable.ic_favorite)
+        else appbar_user_detail.menu.getItem(0).setIcon(R.drawable.ic_favorite_border)
+
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun initializeAppBar() {
@@ -68,6 +84,22 @@ class UserDetailActivity : AppCompatActivity() {
                 }
             }
         })
+
+        appbar_user_detail.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.add_favorite -> {
+                    if (user.isFavorite) {
+                        appbar_user_detail.menu.getItem(0).setIcon(R.drawable.ic_favorite_border)
+                    } else {
+                        appbar_user_detail.menu.getItem(0).setIcon(R.drawable.ic_favorite)
+                    }
+
+                    user.isFavorite = !user.isFavorite
+                    addToFavorites()
+                }
+            }
+            true
+        }
     }
 
     private fun initializeViewModel() {
@@ -153,5 +185,12 @@ class UserDetailActivity : AppCompatActivity() {
             resources.getQuantityString(R.plurals.format_following, user.following, user.following)
         tv_follower.text =
             resources.getString(R.string.format_follow, followerPlural, followingPlural)
+    }
+
+    private fun addToFavorites() {
+        GlobalScope.launch {
+            if (user.isFavorite) appDatabase.favoritesDao().insert(user)
+            else appDatabase.favoritesDao().delete(user)
+        }
     }
 }

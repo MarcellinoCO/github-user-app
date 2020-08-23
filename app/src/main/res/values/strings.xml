@@ -13,8 +13,11 @@
 
     <string name="title_splash_screen">Github User App</string>
     <string name="title_user_list">Users List</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_add_favorite">Add to favorites</string>
 
     <string name="menu_search">Search</string>
+    <string name="menu_favorites">Favorites</string>
     <string name="menu_language">Language</string>
 
     <string name="text_credit">Created by Marcellino Chris O\'Vara</string>
@@ -44,6 +47,10 @@
         <item quantity="one">%1$d user found</item>
         <item quantity="other">%1$d users found</item>
     </plurals>
+    <plurals name="format_favorites_count">
+        <item quantity="one">%1$d favorite</item>
+        <item quantity="other">%1$d favorites</item>
+    </plurals>
 
     <string name="error_loading_list">Error while loading list!</string>
     <string name="error_try_again">Try again</string>
@@ -61,6 +68,7 @@
     <string name="ph_page">Page 1 of 100.000</string>
     <string name="ph_search_query">\'test\':</string>
     <string name="ph_search_count">500 users found</string>
+    <string name="ph_favorites_count">10 favorites</string>
 
     <string name="dialog_exit_title">Thank You!</string>
     <string name="dialog_exit_description">Do rate 5 stars ;D</string>

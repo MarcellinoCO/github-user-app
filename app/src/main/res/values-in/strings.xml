@@ -39,6 +39,9 @@
     <plurals name="format_search_count">
         <item quantity="other">%1$d pengguna ditemukan</item>
     </plurals>
+    <plurals name="format_favorites_count">
+        <item quantity="other">%1$d favorit</item>
+    </plurals>
 
     <string name="error_loading_list">Error saat memuat daftar!</string>
     <string name="error_try_again">Coba lagi</string>
@@ -61,4 +64,8 @@
     <string name="dialog_exit_description">Tolong beri 5 bintang ;D</string>
     <string name="dialog_exit_positive">Pasti!</string>
     <string name="dialog_exit_negative">Tidak</string>
+    <string name="menu_favorites">Favorit</string>
+    <string name="title_favorites">Favorit</string>
+    <string name="ph_favorites_count">10 favorit</string>
+    <string name="title_add_favorite">Tambahkan ke favorit</string>
 </resources>

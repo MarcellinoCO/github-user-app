@@ -31,6 +31,7 @@
                 android:elevation="1dp"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways"
+                app:menu="@menu/appbar_user_detail"
                 app:navigationIcon="@drawable/ic_back" />
 
             <androidx.constraintlayout.widget.ConstraintLayout

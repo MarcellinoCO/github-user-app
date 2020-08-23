@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AlphaAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +15,13 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.button.MaterialButton
 
-open class ListUserAdapter(private val listUser: ArrayList<User>, private val context: Context) :
+open class ListUserAdapter(
+    private val listUser: ArrayList<User>,
+    private val context: Context,
+    private val hasFavorite: Boolean = true
+) :
     RecyclerView.Adapter<ListUserAdapter.ViewHolder>() {
 
     private var onItemClickCallback: OnItemClickCallback? = null
@@ -28,6 +32,8 @@ open class ListUserAdapter(private val listUser: ArrayList<User>, private val co
         val tvRealName: TextView = itemView.findViewById(R.id.tv_item_name)
         val tvOrganization: TextView = itemView.findViewById(R.id.tv_item_company)
         val tvLocation: TextView = itemView.findViewById(R.id.tv_item_location)
+
+        val btnAddFavorite: MaterialButton = itemView.findViewById(R.id.btn_item_add_favorite)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -63,6 +69,7 @@ open class ListUserAdapter(private val listUser: ArrayList<User>, private val co
                             user,
                             holder.ivAvatar
                         )
+                        holder.btnAddFavorite.setOnClickListener(null)
                     }
                     return false
                 }
@@ -80,7 +87,20 @@ open class ListUserAdapter(private val listUser: ArrayList<User>, private val co
         ) else "-"
         holder.tvLocation.text = if (user.location != "null") user.location else "-"
 
-        holder.itemView.animation = AlphaAnimation(0.0f, 1.0f).apply { duration = 1000L }
+        if (hasFavorite) {
+            if (user.isFavorite) holder.btnAddFavorite.setIconResource(R.drawable.ic_favorite)
+            else holder.btnAddFavorite.setIconResource(R.drawable.ic_favorite_border)
+
+            holder.btnAddFavorite.setOnClickListener {
+                if (user.isFavorite) holder.btnAddFavorite.setIconResource(R.drawable.ic_favorite_border)
+                else holder.btnAddFavorite.setIconResource(R.drawable.ic_favorite)
+                user.isFavorite = !user.isFavorite
+
+                onItemClickCallback?.onItemAddToFavorites(holder.adapterPosition, user)
+            }
+        } else holder.btnAddFavorite.visibility = View.GONE
+
+        //holder.itemView.animation = AlphaAnimation(0.0f, 1.0f).apply { duration = 1500L }
     }
 
     override fun getItemCount(): Int {
@@ -91,7 +111,14 @@ open class ListUserAdapter(private val listUser: ArrayList<User>, private val co
         this.onItemClickCallback = onItemClickCallback
     }
 
+    fun removeItemAt(position: Int) {
+        listUser.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, listUser.size)
+    }
+
     interface OnItemClickCallback {
         fun onItemClicked(position: Int, user: User, sharedElement: View)
+        fun onItemAddToFavorites(position: Int, user: User)
     }
 }

@@ -15,15 +15,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.marcellino.githubuserapp.adapter.ListUserAdapter
+import co.marcellino.githubuserapp.db.AppDatabase
 import co.marcellino.githubuserapp.model.User
 import co.marcellino.githubuserapp.utils.NetworkManager
 import co.marcellino.githubuserapp.viewmodel.UserListViewModel
 import kotlinx.android.synthetic.main.activity_user_list.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogListener,
     View.OnClickListener {
 
     private lateinit var userLisViewModel: UserListViewModel
+    private lateinit var appDatabase: AppDatabase
 
     private lateinit var listUserAdapter: ListUserAdapter
     private lateinit var listSearchAdapter: ListUserAdapter
@@ -34,7 +38,7 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
     private var isPreviousPageAvailable = false
     private var isPreviousPageRequested = false
 
-    var listUser = arrayListOf<User>()
+    private var listUser = arrayListOf<User>()
 
     private var isLoading = true
     private var isError = false
@@ -51,7 +55,8 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         initializeListRecyclerView(arrayListOf(), true)
         initializeSearchRecyclerView(arrayListOf(), true)
 
-        NetworkManager.getInstance(this)
+        NetworkManager.getInstance(applicationContext)
+        appDatabase = AppDatabase(applicationContext)
         initializeViewModel()
 
         btn_previous_page.setOnClickListener(this)
@@ -72,11 +77,13 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         searchViewAction.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (!newText.isNullOrBlank()) userLisViewModel.loadSearchPage(newText)
+                else userLisViewModel.cancelSearchPage()
                 return true
             }
 
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (!query.isNullOrBlank()) userLisViewModel.loadSearchPage(query)
+                else userLisViewModel.cancelSearchPage()
                 return true
             }
         })
@@ -95,6 +102,11 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         }
 
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        userLisViewModel.updateFavorites()
     }
 
     override fun onBackPressed() {
@@ -128,11 +140,16 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
     private fun initializeAppBar() {
         setSupportActionBar(appbar_user_list)
         appbar_user_list.setOnMenuItemClickListener {
-            if (it.itemId == R.id.language) {
-                val changeLanguageIntent = Intent(Settings.ACTION_LOCALE_SETTINGS)
-                startActivity(changeLanguageIntent)
+            when (it.itemId) {
+                R.id.favorite -> {
+                    val intentFavoritesActivity = Intent(this, FavoritesActivity::class.java)
+                    startActivity(intentFavoritesActivity)
+                }
+                R.id.language -> {
+                    val intentChangeLanguage = Intent(Settings.ACTION_LOCALE_SETTINGS)
+                    startActivity(intentChangeLanguage)
+                }
             }
-
             true
         }
     }
@@ -148,6 +165,10 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
             override fun onItemClicked(position: Int, user: User, sharedElement: View) {
                 goToDetailActivity(user, sharedElement)
             }
+
+            override fun onItemAddToFavorites(position: Int, user: User) {
+                addToFavorites(user)
+            }
         })
     }
 
@@ -162,6 +183,10 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
             override fun onItemClicked(position: Int, user: User, sharedElement: View) {
                 goToDetailActivity(user, sharedElement)
             }
+
+            override fun onItemAddToFavorites(position: Int, user: User) {
+                addToFavorites(user)
+            }
         })
     }
 
@@ -170,6 +195,7 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
             this,
             ViewModelProvider.NewInstanceFactory()
         ).get(UserListViewModel::class.java)
+        userLisViewModel.setAppDatabase(appDatabase)
 
         if (userLisViewModel.getCurrentPage().value == null) userLisViewModel.loadCurrentPage()
         userLisViewModel.getCurrentPage().observe(this, Observer { newListUser ->
@@ -287,7 +313,6 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
     private fun goToDetailActivity(user: User, sharedElement: View) {
         val intentDetailActivity = Intent(this@UserListActivity, UserDetailActivity::class.java)
         intentDetailActivity.putExtra(UserDetailActivity.EXTRA_USER_DATA, user)
-        intentDetailActivity.putExtra("userList", listUser)
 
         val sharedElementTransition = ActivityOptionsCompat.makeSceneTransitionAnimation(
             this@UserListActivity,
@@ -296,6 +321,13 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         )
 
         startActivity(intentDetailActivity, sharedElementTransition.toBundle())
+    }
+
+    private fun addToFavorites(user: User) {
+        GlobalScope.launch {
+            if (user.isFavorite) appDatabase.favoritesDao().insert(user)
+            else appDatabase.favoritesDao().delete(user)
+        }
     }
 
     override fun onExitDialogActionChosen(exit: Boolean) {

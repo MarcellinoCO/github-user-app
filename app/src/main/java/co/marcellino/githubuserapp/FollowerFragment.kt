@@ -70,7 +70,7 @@ class FollowerFragment : Fragment() {
 
         if (isFirstCreated) rv?.layoutManager =
             LinearLayoutManager(context as Context, LinearLayoutManager.VERTICAL, false)
-        rv?.adapter = object : ListUserAdapter(userList, context as Context) {
+        rv?.adapter = object : ListUserAdapter(userList, context as Context, false) {
             override fun onBindViewHolder(holder: ViewHolder, position: Int) {
                 super.onBindViewHolder(holder, position)
                 holder.ivAvatar.transitionName = ""

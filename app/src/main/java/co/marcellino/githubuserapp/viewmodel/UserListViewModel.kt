@@ -4,18 +4,26 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import co.marcellino.githubuserapp.db.AppDatabase
 import co.marcellino.githubuserapp.model.PageData
 import co.marcellino.githubuserapp.model.User
 import co.marcellino.githubuserapp.utils.NetworkManager
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.math.min
 
 class UserListViewModel : ViewModel() {
 
     private val tag = "GithubUserApp"
     private val userPerPage = 10
+
+    private var appDatabase: AppDatabase? = null
+    fun setAppDatabase(appDatabase: AppDatabase) {
+        this.appDatabase = appDatabase
+    }
 
     private val isError = MutableLiveData<Boolean>()
     fun isError(): LiveData<Boolean> = isError
@@ -90,6 +98,12 @@ class UserListViewModel : ViewModel() {
 
                         tempUser.username = userObject.getString("login")
                         tempUser.avatar = userObject.getString("avatar_url")
+                        GlobalScope.launch {
+                            if (appDatabase?.favoritesDao()
+                                    ?.findById(tempUser.id) != null
+                            ) tempUser.isFavorite = true
+                        }
+
                         val userDetailsRequest = object : JsonObjectRequest(
                             Method.GET,
                             "${NetworkManager.BASE_URL}/users/${tempUser.username}",
@@ -181,6 +195,12 @@ class UserListViewModel : ViewModel() {
 
                         tempUser.username = userObject.getString("login")
                         tempUser.avatar = userObject.getString("avatar_url")
+                        GlobalScope.launch {
+                            if (appDatabase?.favoritesDao()
+                                    ?.findById(tempUser.id) != null
+                            ) tempUser.isFavorite = true
+                        }
+
                         val userDetailsRequest = object : JsonObjectRequest(
                             Method.GET,
                             "${NetworkManager.BASE_URL}/users/${tempUser.username}",
@@ -268,6 +288,12 @@ class UserListViewModel : ViewModel() {
                         tempUser.id = userObject.getInt("id")
                         tempUser.username = userObject.getString("login")
                         tempUser.avatar = userObject.getString("avatar_url")
+                        GlobalScope.launch {
+                            if (appDatabase?.favoritesDao()
+                                    ?.findById(tempUser.id) != null
+                            ) tempUser.isFavorite = true
+                        }
+
                         val userDetailsRequest = object : JsonObjectRequest(
                             Method.GET,
                             "${NetworkManager.BASE_URL}/users/${tempUser.username}",
@@ -318,6 +344,7 @@ class UserListViewModel : ViewModel() {
     private val liveSearchQuery = MutableLiveData<String>()
     private val liveSearchCount = MutableLiveData<Int>()
     private val liveSearchPage = MutableLiveData<ArrayList<User>>()
+    private var searchPage = arrayListOf<User>()
     fun getSearchQuery(): LiveData<String> = liveSearchQuery
     fun getSearchCount(): LiveData<Int> = liveSearchCount
     fun getSearchPage(): LiveData<ArrayList<User>> = liveSearchPage
@@ -335,6 +362,7 @@ class UserListViewModel : ViewModel() {
                     val tempSearchCount = searchPageObject.getInt("total_count")
                     liveSearchCount.postValue(tempSearchCount)
                     if (tempSearchCount == 0) {
+                        searchPage = arrayListOf()
                         liveSearchPage.postValue(arrayListOf())
                         return@Listener
                     }
@@ -348,6 +376,12 @@ class UserListViewModel : ViewModel() {
                         tempUser.id = userObject.getInt("id")
                         tempUser.username = userObject.getString("login")
                         tempUser.avatar = userObject.getString("avatar_url")
+                        GlobalScope.launch {
+                            if (appDatabase?.favoritesDao()
+                                    ?.findById(tempUser.id) != null
+                            ) tempUser.isFavorite = true
+                        }
+
                         val userDetailsRequest = object : JsonObjectRequest(
                             Method.GET,
                             "${NetworkManager.BASE_URL}/users/${tempUser.username}",
@@ -364,6 +398,7 @@ class UserListViewModel : ViewModel() {
 
                                 if (i == (min(userPerPage, searchUsersArray.length()) - 1)) {
                                     tempSearchPage.sortBy { it.id }
+                                    searchPage = tempSearchPage
                                     liveSearchPage.postValue(tempSearchPage)
 
                                     isError.postValue(false)
@@ -396,7 +431,40 @@ class UserListViewModel : ViewModel() {
     }
 
     fun cancelSearchPage() {
+        searchPage = arrayListOf()
         isSearching.postValue(false)
+
         NetworkManager.getInstance(null).cancelRequestWithTag(NetworkManager.TAG_SEARCH)
+        updateFavorites()
+    }
+
+    fun updateFavorites() {
+        GlobalScope.launch {
+            if (currentPage.isNotEmpty()) {
+                for (user in currentPage) {
+                    user.isFavorite = appDatabase?.favoritesDao()?.findById(user.id) != null
+                }
+                liveCurrentPage.postValue(currentPage)
+            }
+
+            if (nextPage.isNotEmpty()) {
+                for (user in nextPage) {
+                    user.isFavorite = appDatabase?.favoritesDao()?.findById(user.id) != null
+                }
+            }
+
+            if (previousPage.isNotEmpty()) {
+                for (user in previousPage) {
+                    user.isFavorite = appDatabase?.favoritesDao()?.findById(user.id) != null
+                }
+            }
+
+            if (searchPage.isNotEmpty()) {
+                for (user in searchPage) {
+                    user.isFavorite = appDatabase?.favoritesDao()?.findById(user.id) != null
+                }
+                liveSearchPage.postValue(searchPage)
+            }
+        }
     }
 }
