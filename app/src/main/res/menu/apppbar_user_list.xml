@@ -16,9 +16,9 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/language"
-        android:icon="@drawable/ic_language"
-        android:title="@string/menu_language"
+        android:id="@+id/preferences"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/menu_preferences"
         app:showAsAction="ifRoom" />
 
 </menu>

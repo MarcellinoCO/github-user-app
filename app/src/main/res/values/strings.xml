@@ -2,6 +2,7 @@
 
     <string name="app_name">Github User App</string>
     <string name="title_activity_splash_screen">Github User App</string>
+    <string name="title_activity_preferences">Preferences</string>
 
     <string name="cd_github_logo">Github Logo</string>
     <string name="cd_user_avatar">User avatar</string>
@@ -15,10 +16,11 @@
     <string name="title_user_list">Users List</string>
     <string name="title_favorites">Favorites</string>
     <string name="title_add_favorite">Add to favorites</string>
+    <string name="title_preferences">Preferences</string>
 
     <string name="menu_search">Search</string>
     <string name="menu_favorites">Favorites</string>
-    <string name="menu_language">Language</string>
+    <string name="menu_preferences">Preferences</string>
 
     <string name="text_credit">Created by Marcellino Chris O\'Vara</string>
 
@@ -74,5 +76,22 @@
     <string name="dialog_exit_description">Do rate 5 stars ;D</string>
     <string name="dialog_exit_positive">Sure!</string>
     <string name="dialog_exit_negative">Nope</string>
+
+    <string name="preference_category_notifications">Notifications</string>
+    <string name="preference_notifications_title">Enable notifications</string>
+    <string name="preference_notifications_time_title">Pick reminder time</string>
+    <string name="preference_notifications_time_summary">Reminder at %1$s</string>
+    <string name="preference_notifications_time_default">09:00</string>
+    <string name="preference_category_language">Language</string>
+    <string name="preference_language_title">Set language</string>
+    <string name="preference_language_summary" translatable="false">English</string>
+
+    <string-array name="language_list">
+        <item>English</item>
+        <item>Bahasa Indonesia</item>
+    </string-array>
+
+    <string name="notification_reminder_title">GithubUserApp reminder</string>
+    <string name="notification_reminder_content">Check out Github\'s most popular users!</string>
 
 </resources>

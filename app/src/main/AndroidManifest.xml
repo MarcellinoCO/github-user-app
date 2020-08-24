@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="co.marcellino.githubuserapp">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,27 +15,32 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
 
-        <activity android:name=".FavoritesActivity" />
+        <receiver
+            android:name=".utils.ReminderReceiver"
+            android:enabled="true"
+            android:exported="true" />
 
+        <activity
+            android:name=".PreferenceActivity"
+            android:label="@string/title_activity_preferences" />
+        <activity android:name=".FavoritesActivity" />
         <activity
             android:name=".SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash_screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".UserListActivity"
             android:label="@string/title_user_list"
             android:theme="@style/AppTheme.List" />
-
         <activity
             android:name=".UserDetailActivity"
             android:label=" " />
-
     </application>
 
 </manifest>

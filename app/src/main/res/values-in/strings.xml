@@ -15,7 +15,7 @@
     <string name="title_user_list">Daftar Pengguna</string>
 
     <string name="menu_search">Cari</string>
-    <string name="menu_language">Bahasa</string>
+    <string name="menu_preferences">Pengaturan</string>
 
     <string name="text_credit">Dibuat oleh Marcellino Chris O\'Vara</string>
 
@@ -68,4 +68,15 @@
     <string name="title_favorites">Favorit</string>
     <string name="ph_favorites_count">10 favorit</string>
     <string name="title_add_favorite">Tambahkan ke favorit</string>
+    <string name="title_activity_preferences">Pengaturan</string>
+    <string name="title_preferences">Pengaturan</string>
+    <string name="preference_category_notifications">Notifikasi</string>
+    <string name="preference_category_language">Bahasa</string>
+    <string name="preference_notifications_title">Nyalakan Notifikasi</string>
+    <string name="preference_language_title">Pilih bahasa</string>
+    <string name="notification_reminder_title">Pengingat GithubUserApp</string>
+    <string name="notification_reminder_content">Cari tahu pengguna terpopuler di Github!</string>
+    <string name="preference_notifications_time_title">Pilih waktu notifikasi</string>
+    <string name="preference_notifications_time_summary">Pengingat setiap %1$s</string>
+    <string name="preference_notifications_time_default" translatable="false">09:00</string>
 </resources>

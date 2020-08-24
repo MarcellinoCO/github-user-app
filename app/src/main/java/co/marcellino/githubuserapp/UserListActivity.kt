@@ -4,7 +4,6 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -145,9 +144,9 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
                     val intentFavoritesActivity = Intent(this, FavoritesActivity::class.java)
                     startActivity(intentFavoritesActivity)
                 }
-                R.id.language -> {
-                    val intentChangeLanguage = Intent(Settings.ACTION_LOCALE_SETTINGS)
-                    startActivity(intentChangeLanguage)
+                R.id.preferences -> {
+                    val intentPreferenceActivity = Intent(this, PreferenceActivity::class.java)
+                    startActivity(intentPreferenceActivity)
                 }
             }
             true

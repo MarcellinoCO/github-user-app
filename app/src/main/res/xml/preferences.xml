@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:key="category_notifications"
+        app:title="@string/preference_category_notifications">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:icon="@drawable/ic_notifications"
+            app:key="@string/preference_notifications_title"
+            app:title="@string/preference_notifications_title" />
+
+        <Preference
+            app:key="@string/preference_notifications_time_title"
+            app:summary="@string/preference_notifications_time_summary"
+            app:title="@string/preference_notifications_time_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="category_language"
+        app:title="@string/preference_category_language">
+
+        <Preference
+            app:icon="@drawable/ic_language"
+            app:key="@string/preference_language_title"
+            app:summary="@string/preference_language_summary"
+            app:title="@string/preference_language_title">
+
+            <intent android:action="android.settings.LOCALE_SETTINGS" />
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>
