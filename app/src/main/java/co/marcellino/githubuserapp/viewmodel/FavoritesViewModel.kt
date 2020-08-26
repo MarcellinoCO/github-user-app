@@ -10,8 +10,6 @@ import kotlinx.coroutines.launch
 
 class FavoritesViewModel : ViewModel() {
 
-    private val TAG = "GithubUserApp"
-
     private var appDatabase: AppDatabase? = null
     fun setAppDatabase(appDatabase: AppDatabase) {
         this.appDatabase = appDatabase

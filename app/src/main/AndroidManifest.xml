@@ -6,6 +6,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <permission
+        android:name="co.marcellino.githubuserapp.READ_DATABASE"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="co.marcellino.githubuserapp.WRITE_DATABASE"
+        android:protectionLevel="normal" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,6 +21,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
+
+        <provider
+            android:name=".provider.FavoritesProvider"
+            android:authorities="co.marcellino.githubuserapp"
+            android:enabled="true"
+            android:exported="true"
+            android:readPermission="co.marcellino.githubuserapp.READ_DATABASE"
+            android:writePermission="co.marcellino.githubuserapp.WRITE_DATABASE" />
 
         <receiver
             android:name=".utils.ReminderReceiver"

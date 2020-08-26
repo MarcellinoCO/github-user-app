@@ -1,5 +1,6 @@
 package co.marcellino.githubuserapp.model
 
+import android.content.ContentValues
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -20,4 +21,19 @@ data class User(
     @ColumnInfo(name = AppDatabase.COLUMN_FOLLOWER) var follower: Int = 0,
     @ColumnInfo(name = AppDatabase.COLUMN_FOLLOWING) var following: Int = 0,
     @ColumnInfo(name = AppDatabase.COLUMN_IS_FAVORITE) var isFavorite: Boolean = false
-) : Parcelable
+) : Parcelable {
+    companion object {
+        fun fromContentValues(contentValues: ContentValues?): User = User(
+            id = contentValues?.getAsInteger(AppDatabase.COLUMN_ID) ?: 0,
+            username = contentValues?.getAsString(AppDatabase.COLUMN_USERNAME) ?: "",
+            avatar = contentValues?.getAsString(AppDatabase.COLUMN_AVATAR) ?: "",
+            name = contentValues?.getAsString(AppDatabase.COLUMN_NAME) ?: "",
+            company = contentValues?.getAsString(AppDatabase.COLUMN_COMPANY) ?: "",
+            location = contentValues?.getAsString(AppDatabase.COLUMN_LOCATION) ?: "",
+            repository = contentValues?.getAsInteger(AppDatabase.COLUMN_REPOSITORY) ?: 0,
+            follower = contentValues?.getAsInteger(AppDatabase.COLUMN_FOLLOWER) ?: 0,
+            following = contentValues?.getAsInteger(AppDatabase.COLUMN_FOLLOWING) ?: 0,
+            isFavorite = contentValues?.getAsBoolean(AppDatabase.COLUMN_IS_FAVORITE) ?: false
+        )
+    }
+}
