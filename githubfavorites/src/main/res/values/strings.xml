@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Github Favorites User App</string>
+
+    <string name="cd_user_avatar">User avatar</string>
+    <string name="cd_icon_company">Company icon</string>
+    <string name="cd_icon_location">Location icon</string>
+
+    <string name="title_favorites">Favorites List</string>
+
+    <string name="ph_user_name">JakeWharton</string>
+    <string name="ph_name">Jake Wharton</string>
+    <string name="ph_company">Member of Google, Inc.</string>
+    <string name="ph_location">Pittsburgh, PA, USA</string>
+    <string name="ph_favorites_count">10 favorites</string>
+
+    <plurals name="format_favorites_count">
+        <item quantity="one">%1$d favorite</item>
+        <item quantity="other">%1$d favorites</item>
+    </plurals>
+    <string name="format_company">Member of %1$s</string>
+</resources>

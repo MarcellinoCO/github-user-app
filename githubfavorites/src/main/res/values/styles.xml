@@ -1,0 +1,30 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowContentTransitions">true</item>
+
+        <item name="android:editTextColor">@color/colorOnPrimary</item>
+        <item name="android:textColorHint">@color/colorOnPrimary</item>
+    </style>
+
+    <style name="AppTheme.AppBar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="background">@color/colorPrimary</item>
+        <item name="titleTextColor">@color/colorOnPrimary</item>
+    </style>
+
+    <style name="AppTheme.Text" parent="TextAppearance.AppCompat.Headline" />
+
+    <style name="AppTheme.Text.Medium" parent="AppTheme.Text">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="AppTheme.Text.Small" parent="AppTheme.Text">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+</resources>
