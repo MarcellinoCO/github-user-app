@@ -13,6 +13,7 @@ import co.marcellino.githubuserapp.adapter.FollowerPagerAdapter
 import co.marcellino.githubuserapp.db.AppDatabase
 import co.marcellino.githubuserapp.model.User
 import co.marcellino.githubuserapp.viewmodel.UserDetailViewModel
+import co.marcellino.githubuserapp.widget.FavoritesWidget
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -191,6 +192,8 @@ class UserDetailActivity : AppCompatActivity() {
         GlobalScope.launch {
             if (user.isFavorite) appDatabase.favoritesDao().insert(user)
             else appDatabase.favoritesDao().delete(user)
+
+            FavoritesWidget.updateAppWidget(this@UserDetailActivity)
         }
     }
 }

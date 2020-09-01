@@ -12,6 +12,7 @@ import co.marcellino.githubuserapp.adapter.ListUserAdapter
 import co.marcellino.githubuserapp.db.AppDatabase
 import co.marcellino.githubuserapp.model.User
 import co.marcellino.githubuserapp.viewmodel.FavoritesViewModel
+import co.marcellino.githubuserapp.widget.FavoritesWidget
 import kotlinx.android.synthetic.main.activity_favorites.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -117,6 +118,8 @@ class FavoritesActivity : AppCompatActivity() {
             GlobalScope.launch {
                 appDatabase.favoritesDao().delete(user)
                 favoritesViewModel.loadTotalFavoritesCount()
+
+                FavoritesWidget.updateAppWidget(this@FavoritesActivity)
             }
         }
     }

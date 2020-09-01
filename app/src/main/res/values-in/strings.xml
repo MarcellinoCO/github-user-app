@@ -78,4 +78,5 @@
     <string name="notification_reminder_content">Cari tahu pengguna terpopuler di Github!</string>
     <string name="preference_notifications_time_title">Pilih waktu notifikasi</string>
     <string name="preference_notifications_time_summary">Pengingat setiap %1$s</string>
+    <string name="widget_empty_view">Data Tidak Tersedia</string>
 </resources>

@@ -22,6 +22,21 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
 
+        <service
+            android:name=".widget.FavoritesWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver android:name=".widget.FavoritesWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="co.marcellino.githubuserapp.ACTION_DETAIL" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/favorites_widget_info" />
+        </receiver>
+
         <provider
             android:name=".provider.FavoritesProvider"
             android:authorities="co.marcellino.githubuserapp"
@@ -38,7 +53,9 @@
         <activity
             android:name=".PreferenceActivity"
             android:label="@string/title_activity_preferences" />
-        <activity android:name=".FavoritesActivity" />
+        <activity
+            android:name=".FavoritesActivity"
+            android:parentActivityName=".UserListActivity" />
         <activity
             android:name=".SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -55,7 +72,8 @@
             android:theme="@style/AppTheme.List" />
         <activity
             android:name=".UserDetailActivity"
-            android:label=" " />
+            android:label=" "
+            android:parentActivityName=".FavoritesActivity" />
     </application>
 
 </manifest>

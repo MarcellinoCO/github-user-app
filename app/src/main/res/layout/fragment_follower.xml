@@ -34,10 +34,10 @@
                 android:layout_marginBottom="8dp"
                 android:contentDescription="@string/cd_icon_error"
                 android:src="@drawable/ic_error"
-                app:tint="@android:color/darker_gray"
                 app:layout_constraintBottom_toTopOf="@id/tv_error"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:tint="@android:color/darker_gray" />
 
             <TextView
                 android:id="@+id/tv_error"

@@ -81,7 +81,7 @@
     <string name="preference_notifications_title">Enable notifications</string>
     <string name="preference_notifications_time_title">Pick reminder time</string>
     <string name="preference_notifications_time_summary">Reminder at %1$s</string>
-    <string name="preference_notifications_time_default">09:00</string>
+    <string name="preference_notifications_time_default" translatable="false">09:00</string>
     <string name="preference_category_language">Language</string>
     <string name="preference_language_title">Set language</string>
     <string name="preference_language_summary" translatable="false">English</string>
@@ -93,5 +93,7 @@
 
     <string name="notification_reminder_title">GithubUserApp reminder</string>
     <string name="notification_reminder_content">Check out Github\'s most popular users!</string>
+
+    <string name="widget_empty_view">No Data Available</string>
 
 </resources>

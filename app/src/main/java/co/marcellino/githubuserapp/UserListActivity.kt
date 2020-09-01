@@ -18,6 +18,7 @@ import co.marcellino.githubuserapp.db.AppDatabase
 import co.marcellino.githubuserapp.model.User
 import co.marcellino.githubuserapp.utils.NetworkManager
 import co.marcellino.githubuserapp.viewmodel.UserListViewModel
+import co.marcellino.githubuserapp.widget.FavoritesWidget
 import kotlinx.android.synthetic.main.activity_user_list.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -326,6 +327,8 @@ class UserListActivity : AppCompatActivity(), ExitDialogFragment.OnExitDialogLis
         GlobalScope.launch {
             if (user.isFavorite) appDatabase.favoritesDao().insert(user)
             else appDatabase.favoritesDao().delete(user)
+
+            FavoritesWidget.updateAppWidget(this@UserListActivity)
         }
     }
 
